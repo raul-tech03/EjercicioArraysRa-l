@@ -33,10 +33,15 @@ public class EjercicioArrays {
 			    }
 			}
 	        
-	        //creamos una lista de los alumnos de la clase
+	        /**
+	         * creamos una lista de los alumnos de la clase y creamos el array de notas "practicas"
+	         */
+			practicas = new int[numAlumnos];
 	        listaClase = new int[numAlumnos];
+	      
 	        for (int i = 0; i < numAlumnos; i++){
 	            listaClase[i] = i+1;
+	            practicas[i] = (int)(Math.random()*11);
 	        }
 	        //Empezamos el uso de listas para facilitar la tarea de índices.
 	        List notas = Arrays.asList(control);
@@ -51,11 +56,6 @@ public class EjercicioArrays {
 	        System.out.println("Lista de clase :" + Arrays.toString(listaClase));
 	        System.out.println("Array de Notas :" + notas);
 	        
-	        //creamos el array de notas "practicas"
-	        practicas = new int[numAlumnos];
-	        for(int i=0; i < practicas.length; i++){
-	            practicas[i] = (int)(Math.random()*11);
-	        }
 	        //Creamos el vector calificaciones
 	        calificaciones = new float[numAlumnos];
 	        for(int i = 0; i<control.length; i++){
@@ -146,5 +146,7 @@ public class EjercicioArrays {
         System.out.println("Nota nueva   alumno nº4: " + calif[3]);
     }
 }
+
+
 
 
