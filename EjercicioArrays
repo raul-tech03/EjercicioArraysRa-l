@@ -13,51 +13,58 @@ public class EjercicioArrays {
 		int[] practicas;
 		float[] calificaciones;
 		float[] estadistica;
-			int[] aprobados;
-			int[] suspensos;
-	        int maxNota = 0;
-	        int minNota = 10;
-	        int indMaxNota, indMinNota;
-			double[] calif;
-			
-	        //Genera notas random entre 1 y 10
-			int[] minMax = generarNotasYCalcularMinMax(control);
-			minNota = minMax[0];
-			maxNota = minMax[1];
-	        
-	        /**
-	         * creamos una lista de los alumnos de la clase y creamos el array de notas "practicas"
-	         */
-			int[][] resultado = generarListaClaseYPracticas(numAlumnos);
-			listaClase = resultado[0];
-			practicas = resultado[1];
-			
+		int[] aprobados;
+		int[] suspensos;
+        int maxNota = 0;
+        int minNota = 10;
+        int indMaxNota, indMinNota;
+		double[] calif;
+		
+        //Genera notas random entre 1 y 10
+		int[] minMax = generarNotasYCalcularMinMax(control);
+		minNota = minMax[0];
+		maxNota = minMax[1];
+        
+        /**
+         * creamos una lista de los alumnos de la clase y creamos el array de notas "practicas"
+         */
+		int[][] resultado = generarListaClaseYPracticas(numAlumnos);
+		listaClase = resultado[0];
+		practicas = resultado[1];
+		
 
-	        //Empezamos el uso de listas para facilitar la tarea de índices.
-	        List notas = Arrays.asList(control);
-	        indMinNota = notas.indexOf(minNota) + 1;
-	        indMaxNota = notas.indexOf(maxNota) + 1;
+        //Empezamos el uso de listas para facilitar la tarea de índices.
+        List notas = Arrays.asList(control);
+        indMinNota = notas.indexOf(minNota) + 1;
+        indMaxNota = notas.indexOf(maxNota) + 1;
 
-	        //Comprobamos el resultado del ejercicio   
-	        resultado(minNota,maxNota,indMinNota,indMaxNota,listaClase,notas);
-	        
-	        //Creamos el vector calificaciones	        
-	        calificaciones = vectorCalificaciones(control, practicas, numAlumnos);
-	        
-	        System.out.println("Prácticas      :" + Arrays.toString(practicas));
-	        System.out.println("Calificaciones :" + Arrays.toString(calificaciones));
-	        
-	        //Sacamos la estadística de calificaciones
-	        //hacemos un array de 10 para la estadística.
-	        
-	       estadistica = estadistica(calificaciones, numAlumnos, control);
-	       
+        //Comprobamos el resultado del ejercicio   
+        resultado(minNota,maxNota,indMinNota,indMaxNota,listaClase,notas);
+        
+        //Creamos el vector calificaciones	        
+        calificaciones = vectorCalificaciones(control, practicas, numAlumnos);
+        
+        System.out.println("Prácticas      :" + Arrays.toString(practicas));
+        System.out.println("Calificaciones :" + Arrays.toString(calificaciones));
+        
+        //Sacamos la estadística de calificaciones
+        //hacemos un array de 10 para la estadística.
+        
+       estadistica = estadistica(calificaciones, numAlumnos);
+       
+       for (int i = 0; i < 10; i++) {
+	       double sol = (Math.round(estadistica[i] * 10000.0)) / 100.0;
+           System.out.println("Estadística nota tramo <=" 
+                   + (i + 1) + " = " 
+                   + sol + "%");
+       }
+       
         //Aprobados y suspensos
 	            
        aprobados = new int[numAlumnos];
        suspensos = new int[numAlumnos];
 
-       int[] contadores = calcularAprobadosSuspensos(calificaciones, numAlumnos, aprobados, suspensos);
+       int[] contadores = calcularAprobadosSuspensos(calificaciones, aprobados, suspensos);
 
        int countAprobados = contadores[0];
        int countSuspensos = contadores[1];
@@ -86,18 +93,12 @@ public class EjercicioArrays {
         alumno en clase al que supuestamente le corresponde como nota un 6.*/
         
         calif = calificacion();
-        
-        /*calif = new double[40];
-        for (int j=0; j<31; j++){
-            calif[j] = (int)(Math.random()*11);
-        }*/
-        
+         
         System.out.println("Nota antigua alumno nº4: " + calif[3]); 
         calif[3] = 6;
         System.out.println("Nota nueva   alumno nº4: " + calif[3]);
     }
     
-    //Genera notas random entre 1 y 10
     private static int[] generarNotasYCalcularMinMax(Integer[] control) {
         int maxNota = 0;
         int minNota = 10;
@@ -116,9 +117,6 @@ public class EjercicioArrays {
         return new int[]{minNota, maxNota};
     }
     
-    /**
-     * creamos una lista de los alumnos de la clase y creamos el array de notas "practicas"
-     */
     private static int[][] generarListaClaseYPracticas(int numAlumnos) {
         int[] listaClase = new int[numAlumnos];
         int[] practicas = new int[numAlumnos];
@@ -148,80 +146,60 @@ public class EjercicioArrays {
         }
         return calificaciones;
     }
-    
-    private static float[] estadistica(float[] calificaciones, int numAlumnos, Integer[] control) {
+     
+    private static float[] estadistica(float[] calificaciones, int numAlumnos) {
         float[] estadistica = new float[10];
-        
+
         for (int i = 0; i < 10; i++) {
             float count = 0;
-            float sum = 0;
-            for (int j = 0; j < control.length; j++) {
-                if ((i < calificaciones[j]) && ((i + 1) >= calificaciones[j])) {
-                    sum += calificaciones[j];
-                    count += 1;
+
+            for (int j = 0; j < calificaciones.length; j++) {
+                if (calificaciones[j] > i && calificaciones[j] <= i + 1) {
+                    count++;
                 }
             }
-            if (count != 0) {
-                estadistica[i] = ((float) count / numAlumnos);
-            } else {
-                estadistica[i] = 0;
-            }
-            double sol = (Math.round(estadistica[i] * 10000.0)) / 100.0;
-            System.out.println("Estadística nota tramo <=" 
-                    + (i + 1) + " = " 
-                    + sol + "%");
+
+            estadistica[i] = count / numAlumnos;
         }
-        
+
         return estadistica;
     }
    
-    private static int[] calcularAprobadosSuspensos(float[] calificaciones, int numAlumnos, int[] aprobados, int[] suspensos) {
-        int countAprobados = 0;
-        int countSuspensos = 0;
-        
-        for (int i = 0; i < numAlumnos; i++) {
-            if (calificaciones[i] < 5) {
-                aprobados[i] = i;
-                countAprobados += 1;
-            } else {
-                suspensos[i] = i;
-                countSuspensos += 1;
-            }
-        }
-        
+    private static int[] calcularAprobadosSuspensos(float[] calificaciones, int[] aprobados, int[] suspensos) {
+    	int countAprobados = 0;
+    	int countSuspensos = 0;
+
+    	for (int i = 0; i < calificaciones.length; i++) {
+    	    if (calificaciones[i] < 5) {
+    	        aprobados[i] = i;
+    	        countAprobados++;
+    	    } else {
+    	        suspensos[i] = i;
+    	        countSuspensos++;
+    	    }
+    	}
+    	
         return new int[]{countAprobados, countSuspensos};
     }
     
     private static int[][] resumirAprobadosSuspensos(int[] aprobados, int[] suspensos, int countAprobados, int countSuspensos) {
-        int i = 0;
-        int x = 0;
         
         int[] a = new int[countAprobados];
         int[] s = new int[countSuspensos];
+        int x = 0;
         
-        while (i < aprobados.length) {
+        for (int i = 0; i < aprobados.length; i++) {
             if (aprobados[i] != 0) {
-                a[x] = aprobados[i];
-                i++;
-                x++;
-            } else {
-                i++;
+                a[x++] = aprobados[i];
             }
         }
         
-        i = 0;
         x = 0;
-        
-        while (i < suspensos.length) {
+        for (int i = 0; i < suspensos.length; i++) {
             if (suspensos[i] != 0) {
-                s[x] = suspensos[i];
-                i++;
-                x++;
-            } else {
-                i++;
+                s[x++] = suspensos[i];
             }
-        }
-        
+        }        
         return new int[][] { a, s };
     }
     
@@ -235,5 +213,6 @@ public class EjercicioArrays {
         return calif;
     }    
 }
+
 
 
